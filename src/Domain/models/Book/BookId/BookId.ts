@@ -1,17 +1,13 @@
-import isEqual from 'lodash/isEqual'
-
-export class BookId {
-    private readonly _value: string
-
+import { ValueObject } from '../shared/ValueObject'
+export class BookId extends ValueObject<string, 'BookId'> {
     static readonly MAX_LENGTH = 13
     static readonly MIN_LENGTH = 10
 
     constructor(value: string) {
-        this.validate(value)
-        this._value = value
+        super(value)
     }
 
-    private validate(isbn: string): void {
+    protected validate(isbn: string): void {
         if (isbn.length < BookId.MIN_LENGTH || isbn.length > BookId.MAX_LENGTH) {
             throw new Error('ISBNの桁数が不正です')
         }
@@ -27,14 +23,6 @@ export class BookId {
 
     private isValidIsbn13(isbn13: string): boolean {
         return isbn13.startsWith('978') && isbn13.length === 13;
-    }
-
-    equals(other: BookId): boolean {
-        return isEqual(this._value, other._value)
-    }
-
-    get value(): string {
-        return this._value
     }
 
     toISBN(): string {
